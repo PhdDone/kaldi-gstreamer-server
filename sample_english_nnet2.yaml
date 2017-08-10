@@ -8,8 +8,8 @@ decoder:
     model : test/models/english/tedlium_nnet_ms_sp_online/final.mdl
     word-syms : test/models/english/tedlium_nnet_ms_sp_online/words.txt
     fst : test/models/english/tedlium_nnet_ms_sp_online/HCLG.fst
-    mfcc-config : test/models/english/tedlium_nnet_ms_sp_online/conf/mfcc.conf
-    ivector-extraction-config : test/models/english/tedlium_nnet_ms_sp_online/conf/ivector_extractor.conf
+    #mfcc-config : test/models/english/tedlium_nnet_ms_sp_online/conf/mfcc.conf
+    #ivector-extraction-config : test/models/english/tedlium_nnet_ms_sp_online/conf/ivector_extractor.conf
     max-active: 10000
     beam: 10.0
     lattice-beam: 6.0
@@ -19,6 +19,8 @@ decoder:
     traceback-period-in-secs: 0.25
     chunk-length-in-secs: 0.25
     num-nbest: 10
+    add-pitch: true
+    #nnet-mode: 3
     #Additional functionality that you can play with:
     #lm-fst:  test/models/english/tedlium_nnet_ms_sp_online/G.fst
     #big-lm-const-arpa: test/models/english/tedlium_nnet_ms_sp_online/G.carpa

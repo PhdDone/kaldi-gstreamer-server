@@ -94,14 +94,19 @@ def content_type_to_caps(content_type):
     Converts MIME-style raw audio content type specifier to GStreamer CAPS string
     """
     default_attributes= {"rate": 16000, "format" : "S16LE", "channels" : 1, "layout" : "interleaved"}
+    #default_attributes= {"rate": 8000, "format" : "S16LE", "channels" : 1, "layout" : "interleaved"}
+    logging.info("####")
     media_type, _, attr_string = content_type.replace(";", ",").partition(",")
     if media_type in ["audio/x-raw", "audio/x-raw-int"]:
         media_type = "audio/x-raw"
         attributes = default_attributes
         for (key,_,value) in [p.partition("=") for p in attr_string.split(",")]:
             attributes[key.strip()] = value.strip()
+        #attributes["rate"] = 8000 #hack rate to 8000
+        print "yzhdong"
         return "%s, %s" % (media_type, ", ".join(["%s=%s" % (key, value) for (key,value) in attributes.iteritems()]))
     else:
+        print "yyyzhdong"
         return content_type
 
 
@@ -267,7 +272,6 @@ class WorkerSocketHandler(tornado.websocket.WebSocketHandler):
     def set_client_socket(self, client_socket):
         self.client_socket = client_socket
 
-
 class DecoderSocketHandler(tornado.websocket.WebSocketHandler):
     # needed for Tornado 4.0
     def check_origin(self, origin):
@@ -283,10 +287,13 @@ class DecoderSocketHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
         self.id = str(uuid.uuid4())
+        self.content_id = self.get_argument("content-id", "none", True)
+        if self.content_id != "none":
+            self.id = self.content_id
+            logging.info("%s: Using content_id as id" % self.id)
         logging.info("%s: OPEN" % (self.id))
         logging.info("%s: Request arguments: %s" % (self.id, " ".join(["%s=\"%s\"" % (a, self.get_argument(a)) for a in self.request.arguments])))
         self.user_id = self.get_argument("user-id", "none", True)
-        self.content_id = self.get_argument("content-id", "none", True)
         self.worker = None
         try:
             self.worker = self.application.available_workers.pop()
@@ -296,6 +303,8 @@ class DecoderSocketHandler(tornado.websocket.WebSocketHandler):
 
             content_type = self.get_argument("content-type", None, True)
             if content_type:
+                #TODO(yzhdong): hack write own content type to 8000
+                content_type="audio/x-raw, layout=(string)interleaved, rate=(int)8000, format=(string)S16LE, channels=(int)1"
                 logging.info("%s: Using content type: %s" % (self.id, content_type))
 
             self.worker.write_message(json.dumps(dict(id=self.id, content_type=content_type, user_id=self.user_id, content_id=self.content_id)))

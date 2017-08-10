@@ -25,7 +25,11 @@ def post_process_json(str):
                 confidence = 1.0e+10;
             event["result"]["hypotheses"][0]["confidence"] = confidence
 
-            event["result"]["hypotheses"][0]["transcript"] += "."
+            #event["result"]["hypotheses"][0]["transcript"] += "."
+            #event["result"]["hypotheses"][0]["transcript"] += ""
+            res = event["result"]["hypotheses"][0]["transcript"]
+            res2 = res.replace(' ', '')
+            event["result"]["hypotheses"][0]["transcript"] = res2;
             del event["result"]["hypotheses"][1:]
         return json.dumps(event)
     except:
