@@ -304,7 +304,7 @@ class DecoderSocketHandler(tornado.websocket.WebSocketHandler):
             content_type = self.get_argument("content-type", None, True)
             if content_type:
                 #TODO(yzhdong): hack write own content type to 8000
-                content_type="audio/x-raw, layout=(string)interleaved, rate=(int)8000, format=(string)S16LE, channels=(int)1"
+                #content_type="audio/x-raw, layout=(string)interleaved, rate=(int)8000, format=(string)S16LE, channels=(int)1"
                 logging.info("%s: Using content type: %s" % (self.id, content_type))
 
             self.worker.write_message(json.dumps(dict(id=self.id, content_type=content_type, user_id=self.user_id, content_id=self.content_id)))

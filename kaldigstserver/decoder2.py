@@ -153,8 +153,22 @@ class DecoderPipeline2(object):
 
         return self.asr.set_property("adaptation-state", adaptation_state)
 
+    def convert_raw_to_wav(self):
+        raw_data_path = self.filesink.get_property("location")
+        bashCommand = "sox -r 16k -b 16 -e signed-integer -t raw " + raw_data_path + " " + raw_data_path + ".wav"
+        import subprocess
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        if (error is None):
+            logger.info("%s: convert raw to wav: %s" % (self.request_id, raw_data_path+".wav"))
+        else:
+            logger.error("%s: error convert raw to wav" % (self.request_id, error))
     def finish_request(self):
+        #TODO(yzhdong): convert raw into wav
         logger.info("%s: Resetting decoder state" % self.request_id)
+        raw_data_path = self.filesink.get_property("location")
+        logger.info('%s: logging raw data to %s' % (self.request_id, raw_data_path))
+        self.convert_raw_to_wav()
         if self.outdir:
             self.filesink.set_state(Gst.State.NULL)
             self.filesink.set_property('location', "/dev/null")
