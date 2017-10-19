@@ -169,7 +169,7 @@ class DecoderPipeline2(object):
         raw_data_path = self.filesink.get_property("location")
         logger.info('%s: logging raw data to %s' % (self.request_id, raw_data_path))
         self.convert_raw_to_wav()
-        if self.outdir:
+        if self.outdir and self.request_id:
             self.filesink.set_state(Gst.State.NULL)
             self.filesink.set_property('location', "/dev/null")
             self.filesink.set_state(Gst.State.PLAYING)

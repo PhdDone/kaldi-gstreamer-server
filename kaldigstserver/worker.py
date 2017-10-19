@@ -91,7 +91,6 @@ class ServerWebsocket(WebSocketClient):
             content_type = props['content_type']
             self.request_id = props['id']
             content_id = props['content_id']
-            print content_id
             self.num_segments = 0
             self.decoder_pipeline.init_request(self.request_id, content_type)
             self.last_decoder_message = time.time()
@@ -336,7 +335,7 @@ def main():
 
     full_post_processor = None
     if "full-post-processor" in conf:
-        full_post_processor = Popen(conf["full-post-processor"], shell=True, stdin=PIPE, stdout=PIPE)
+        full_post_processor = Popen(conf["full-post-processor"], shell=False, stdin=PIPE, stdout=PIPE)
 
     global USE_NNET2
     USE_NNET2 = conf.get("use-nnet2", False)

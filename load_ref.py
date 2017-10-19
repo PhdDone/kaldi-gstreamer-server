@@ -12,9 +12,6 @@ id_dic = { "content": "yue.transcript",
            
 scp_wav_file = "yue-wav.scp"
 
-with open('reference-content.json.0925') as data_file:    
-    data = json.load(data_file)
-
 def dump_wav_scp(outfile):
     print outfile
     res = []
@@ -42,6 +39,8 @@ def dump(key_name, outfile):
 
 if __name__ == "__main__":
     date = sys.argv[1]
+    with open('reference-content.json.' + date) as data_file:    
+        data = json.load(data_file)
     for key in id_dic:
         dump(key, "{}{}-{}".format(scp_base_dir, date, id_dic[key]))
     dump_wav_scp("{}{}-{}".format(scp_base_dir, date, scp_wav_file))
