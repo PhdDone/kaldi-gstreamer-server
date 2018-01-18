@@ -1,0 +1,63 @@
+# You have to download TEDLIUM "online nnet2" models in order to use this sample
+# Run download-tedlium-nnet2.sh in 'test/models' to download them.
+use-nnet2: True
+# decoder:
+#     use-threaded-decoder:  true
+#     model : /nfs/mobvoi/corpus/zh-hk/LDC2016S02/cfyeh_am_train/exp/chain/final.mdl
+#     word-syms : /nfs/mobvoi/corpus/zh-hk/IARPA_BABEL_BP_101/lm_v0/my_expt/exp/chain/graph/words.txt
+#     fst : /nfs/mobvoi/corpus/zh-hk/IARPA_BABEL_BP_101/lm_v0/my_expt/exp/chain/graph/HCLG.fst
+#     max-active: 7000
+#     min-active: 200
+#     beam: 15.0
+#     lattice-beam: 8.0
+#     acoustic-scale: 1.0
+#     nnet-mode: 3
+#     add-pitch: true
+#     feature-type: fbank
+#     #fbank-config: /home/cfyeh/workspace/20170615.LDC2016S02/conf/fbank.conf
+#     fbank-config: /home/yzhdong/sandbox/fbank.conf
+
+decoder:
+    use-threaded-decoder:  true
+    #model : /home/yzhdong/mobvoi/english-lm/data/final.mdl
+    model : /nfs/yzhdong/workspace/20171005.English.LibriSpeech.TEDLium.KingASR.CMU/exp_car_noise/chain/final.mdl
+    word-syms : /nfs/yzhdong/workspace/20171005.English.LibriSpeech.TEDLium.KingASR.CMU/exp_car_noise/chain/graph_yuanzhe_interpolate_glog_poi_music_chinadaily_librispeech_tedlium/words.txt
+    fst : /nfs/yzhdong/workspace/20171005.English.LibriSpeech.TEDLium.KingASR.CMU/exp_car_noise/chain/graph_yuanzhe_interpolate_glog_poi_music_chinadaily_librispeech_tedlium/HCLG.fst
+    
+    max-active: 7000
+    min-active: 200
+    beam: 15.0
+    lattice-beam: 8.0
+    acoustic-scale: 1.0
+    nnet-mode: 3
+    add-pitch: true
+    feature-type: fbank
+    fbank-config: /nfs/mobvoi/corpus/zh-hk/huiting_cantonese_1000h/my_am_train/conf/fbank.conf
+    online-pitch-config: /nfs/mobvoi/corpus/zh-hk/huiting_cantonese_1000h/my_am_train/conf/pitch_online_l75r15.conf
+
+out-dir: /home/yzhdong/data/cantonese
+
+use-vad: True
+silence-timeout: 10
+
+# Just a sample post-processor that appends "." to the hypothesis
+# post-processor: perl -npe 'BEGIN {use IO::Handle; STDOUT->autoflush(1);} s/(.*)/\1./;'
+
+# A sample full post processor that add a confidence score to 1-best hyp and deletes other n-best hyps
+full-post-processor: /home/yzhdong/mobvoi/kaldi-gstreamer-server/english_full_post_processor.py
+
+logging:
+    version : 1
+    disable_existing_loggers: False
+    formatters:
+        simpleFormater:
+            format: '%(asctime)s - %(levelname)7s: %(name)10s: %(message)s'
+            datefmt: '%Y-%m-%d %H:%M:%S'
+    handlers:
+        console:
+            class: logging.StreamHandler
+            formatter: simpleFormater
+            level: DEBUG
+    root:
+        level: DEBUG
+        handlers: [console]
